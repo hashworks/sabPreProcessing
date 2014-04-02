@@ -86,5 +86,5 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
 HIGH_PRIORITY_SIZE=100;                                                 # Below this size (in megabytes) priority will always be high
 
 PASSWORD_FILE='/home/username/.sabnzbdplus/passwordlist'                # (WHOLE!) Path to password file
-LOGFILE='/home/username/.sabnzbdplus/scripts/sabPreProcessing.log';     # (WHOLE!) Path to logfile
+
 DO_LOG=true;                                                            # To log or not to log, thats the question

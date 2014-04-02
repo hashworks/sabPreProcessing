@@ -20,6 +20,9 @@ source "$DIR"'/config.sh';
 
 # Usage: ./sabPreProcessing.sh 'Dexter.S07E06.FRENCH.720p.HDTV.x264-JMT Testmessage, not part of releasename / securepassword' '3' 'standard' '' '-100' '9711567550'
 
+# Logfile
+LOGFILE="$DIR"'/preprocessing.log';
+
 # Log function
 function log() {
   if $DO_LOG; then
