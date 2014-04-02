@@ -5,12 +5,12 @@ MIN_RELEASENAME_SIZE='13';           # Minimum string lenght of releasename befo
 SERIES_CATEGORY='series';            # Your SAB-cat of your tv shows
 SERIES_MIN_SIZE=180;                 # Minimum tv show size in megabytes before it gets paused
 SERIES_PRIORITY='1';                 # Default priority of tv shows (-100 -2, -1, 0 or 1, meaning Default, Paused, Low, Normal, High)
-SERIES_SCRIPT='sabToSickBeard.py';   # Post-Processing script of tv shows
+SERIES_SCRIPT='';                    # Post-Processing script of tv shows
 
 MOVIES_CATEGORY='movies';            # Your SAB-cat of your movies
 MOVIES_MIN_SIZE=400                  # Minimum movie size in megabytes before it gets paused
 MOVIES_PRIORITY='1';                 # Default priority of movies (-100 -2, -1, 0 or 1, meaning Default, Paused, Low, Normal, High)
-MOVIES_SCRIPT='sabToCouchPotato.py'; # Post-Processing script of movies
+MOVIES_SCRIPT='';                    # Post-Processing script of movies
 INCLUDE_IMDB_ID=true;                # Include the IMDB in the final nzb name using CouchPotato tagging ("RELEASENAME.cp(tt0432425)")
 
 # List of games release-groups for the games-recognition, thanks to xREL.to for the list.
@@ -63,7 +63,7 @@ GAMES_GROUPS=('iTWINS' 'LND' 'GENESIS' 'NESSUNO' 'MONEY' 'SiLENTGATE' 'PRD' 'JoW
 
 GAMES_CATEGORY='games';              # Your SAB-cat of your games
 GAMES_PRIORITY='-1';                 # Default priority of games (-100 -2, -1, 0 or 1, meaning Default, Paused, Low, Normal, High)
-GAMES_SCRIPT='sabToWizznab.sh';      # Post-Processing script of games
+GAMES_SCRIPT='';                     # Post-Processing script of games
 
 EXCEPTIONS=('had551');               # Strings in titles which shouldn't be parsed at all
 
@@ -85,6 +85,6 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
 
 HIGH_PRIORITY_SIZE=100;                                                 # Below this size (in megabytes) priority will always be high
 
-PASSWORD_FILE='/home/hashworks/.sabnzbdplus/passwordlist'               # (WHOLE!) Path to password file
-LOGFILE='/home/hashworks/.sabnzbdplus/scripts/sabPreProcessing.log';    # (WHOLE!) Path to logfile
+PASSWORD_FILE='/home/username/.sabnzbdplus/passwordlist'                # (WHOLE!) Path to password file
+LOGFILE='/home/username/.sabnzbdplus/scripts/sabPreProcessing.log';     # (WHOLE!) Path to logfile
 DO_LOG=true;                                                            # To log or not to log, thats the question
