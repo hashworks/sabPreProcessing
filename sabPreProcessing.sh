@@ -74,7 +74,7 @@ ACCEPT=1;
 STRING_EXCEPTION=false;
 for EXCEPTION in "${EXCEPTIONS[@]}"
 do
-  if ! [ -z "$(echo "$NAME" | grep -io ''$EXCEPTION'')" ]; then STRING_EXCEPTION=true; fi;
+  if ! [ -z "$(echo "$NAME" | grep -io \""$EXCEPTION"\")" ]; then STRING_EXCEPTION=true; fi;
 done;
 
 if [ "$STRING_EXCEPTION" == "false" ]; then
@@ -104,7 +104,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
   fi;
 
   # Get a clean name by removing the password and some exceptions from CLEAN_ARRAY (config)
-  CLEAN_NAME="${NAME/""$PASSWORD""/}";
+  CLEAN_NAME="${NAME/PASSWORD/}";
   for CLEANER in "${CLEAN_ARRAY[@]}"
   do
     CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
@@ -149,8 +149,8 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
       # If GAMES_GROUPS name is found do tv show procedure for games
       for GAMES_GROUP in "${GAMES_GROUPS[@]}"
       do
-        if (( $(echo "${#GAMES_GROUP}") > 2 )); then
-        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[-| ]'$GAMES_GROUP'')" ]; then
+        if (( ${#GAMES_GROUP} > 2 )); then
+        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io \"[-| ]"$GAMES_GROUP"\")" ]; then
             	log "  NZB is a game.";
   	        CATEGORY="$GAMES_CATEGORY";
   	        PRIORITY="$GAMES_PRIORITY";
@@ -170,10 +170,10 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
 
 
   # Get the releasename if there is one
-  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o '[_a-zA-Z.0-9]\{'$MIN_RELEASENAME_SIZE',\}[-]\{1\}[a-zA-Z0-9]\{2,\}' | head -1);
+  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
   if [ -z "$RELEASENAME" ]; then
     # Replace spaces with . and try again
-    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o '[_a-zA-Z.0-9]\{'$MIN_RELEASENAME_SIZE',\}[-]\{1\}[a-zA-Z0-9]\{2,\}' | head -1);
+    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
     if [ -z "$RELEASENAME" ]; then
       # Try another method to catch the releasename (Catches "Dexter FRENCH test 720p HDTV x264 JMT" f.e.
       readarray -t VAR <<< "$(echo "$CLEAN_NAME" | grep -Eo '( [a-zA-Z0-9]{2,15})')";
@@ -181,7 +181,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
         VAR=${VAR[((${#VAR[@]} - 1))]};
         VAR=${VAR/ /};
         VAR=${CLEAN_NAME/ $VAR/-$VAR};
-        RELEASENAME=$(echo "${VAR// /.}" | grep -o '[_a-zA-Z.0-9]\{'$MIN_RELEASENAME_SIZE',\}[-]\{1\}[a-zA-Z0-9]\{2,\}' | head -1);
+        RELEASENAME=$(echo "${VAR// /.}" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
       fi;
     fi;
   fi;
@@ -220,3 +220,4 @@ if [ "$ACCEPT" == 0 ]; then log " NZB ""$NZBNAME"" refused."; fi;
 log "Done.";
 
 exit 0; # If the script has an exit code other than 0, it's assumed the script failed and the NZB will be accepted. 0 is standard.
+
