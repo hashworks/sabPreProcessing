@@ -169,7 +169,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
   fi;
 
   # Get the releasename if there is one
-  RELEASENAME_REGEX="[_a-zA-Z.0-9-]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}";
+  RELEASENAME_REGEX="[_a-zA-Z.0-9-]\{""$MIN_RELEASENAME_SIZE"",\}-[a-zA-Z0-9]\{2,\}";
   RELEASENAME=$(echo "$CLEAN_NAME" | grep -o ""$RELEASENAME_REGEX"" | head -1);
   if [ -z "$RELEASENAME" ]; then
     # Replace spaces with . and try again
