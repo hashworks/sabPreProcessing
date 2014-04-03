@@ -168,12 +168,12 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
     log " Size below ''$HIGH_PRIORITY_SIZE''mb, assigning high priority.";
   fi;
 
-
   # Get the releasename if there is one
-  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
+  RELEASENAME_REGEX="[_a-zA-Z.0-9-]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}";
+  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o ""$RELEASENAME_REGEX"" | head -1);
   if [ -z "$RELEASENAME" ]; then
     # Replace spaces with . and try again
-    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
+    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
     if [ -z "$RELEASENAME" ]; then
       # Try another method to catch the releasename (Catches "Dexter FRENCH test 720p HDTV x264 JMT" f.e.
       readarray -t VAR <<< "$(echo "$CLEAN_NAME" | grep -Eo '( [a-zA-Z0-9]{2,15})')";
@@ -181,7 +181,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
         VAR=${VAR[((${#VAR[@]} - 1))]};
         VAR=${VAR/ /};
         VAR=${CLEAN_NAME/ $VAR/-$VAR};
-        RELEASENAME=$(echo "${VAR// /.}" | grep -o "[_a-zA-Z.0-9]\{""$MIN_RELEASENAME_SIZE"",\}[-]\{1\}[a-zA-Z0-9]\{2,\}" | head -1);
+        RELEASENAME=$(echo "${VAR// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
       fi;
     fi;
   fi;
