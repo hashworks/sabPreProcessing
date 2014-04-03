@@ -40,7 +40,7 @@ cp 'sabPreProcessing/default.config.sh' 'sabPreProcessing/config.sh';
 
 Edit your configuration file and set your variables.<br />
 Remove the variables you wish to stay at default value.<br />
-You can extend default arrays by ‘ARRAY+=('bar');’.
+You can extend default arrays by `ARRAY+=('bar');`.
 
 Make the script files executable. This may need root rights:
 ```bash
