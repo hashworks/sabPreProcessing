@@ -3,13 +3,13 @@ sabPreProcessing
 *A pre-processing script for SABnzbd in BASH!*
 
 I always loved the "click and forget" possibility of Sickbeard and Couchpotato.<br />
-But sometimes I need to add an nzb file myself – no category is set, only the default post-script and mostly the folder name just looks like crap. And even when Couchpotato or Sickbeard added something there was a chance it was not what I wanted it to be.<br />
+But sometimes I need to add an nzb file myself – no category is set, only the default post-script is used and mostly the folder name just looks like crap. And even when Couchpotato or Sickbeard added something there was a chance it was not what I wanted it to be.<br />
 I needed a pre-processing script.<br />
-There where various SabNZBd post-processing scripts out there,<br />
+There where various SABnzbd post-processing scripts out there,<br />
 but not many pre-processing scripts with various features – so I wrote my own in BASH.
 
 ### FEATURES
-* Set SabNZBd category automatically by tv-show-regex, IMDB-ID or games group
+* Set SABnzbd category automatically by tv-show-regex, IMDB-ID or games group
 * Set post-processing script and priority according to category
 * Refuse download according to size and category (which movie is under 400mb?)
 * Automatically set high priority on low size
@@ -21,13 +21,13 @@ but not many pre-processing scripts with various features – so I wrote my own 
 * Exact log file
 
 ### HOW TO INSTALL
-Move to your SabNZBd script folder and clone the script:
+Move to your SABnzbd script folder and clone the script:
 ```bash
 cd '/home/username/.sabnzbdplus/scripts';
 git clone 'https://github.com/HashWorks/sabPreProcessing.git';
 ```
 
-Add a symlink inside your SabNZBd script folder to the script file:
+Add a symlink inside your SABnzbd script folder to the script file:
 ```bash
 ln -s 'sabPreProcessing/sabPreProcessing.sh' 'sabPreProcessing.sh';
 ```
@@ -48,7 +48,7 @@ chmod a+x 'sabPreProcessing/config.sh';
 chmod a+x 'sabPreProcessing/sabPreProcessing.sh';
 ```
 
-Add the pre-processing script to your SabNZBd settings and save them: http://i.imgur.com/N4soUIr.png<br />
+Add the pre-processing script to your SABnzbd settings and save them: http://i.imgur.com/N4soUIr.png<br />
 And you are done!
 
 
