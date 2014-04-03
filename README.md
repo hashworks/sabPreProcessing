@@ -5,7 +5,8 @@ sabPreProcessing
 I always loved the "click and forget" possibility of Sickbeard and Couchpotato.<br />
 But sometimes I need to add an nzb file myself – no category is set, only the default post-script and mostly the folder name just looks like crap. And even when Couchpotato or Sickbeard added something there was a chance it was not what I wanted it to be.<br />
 I needed a pre-processing script.<br />
-There where various SabNZBd post-processing scripts out there, but not that many pre-processing scripts with various features –<br /> so I wrote my own in BASH.
+There where various SabNZBd post-processing scripts out there,<br />
+but not many pre-processing scripts with various features – so I wrote my own in BASH.
 
 ### FEATURES
 * Set SabNZBd category automatically by tv-show-regex, IMDB-ID or games group
