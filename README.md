@@ -3,7 +3,8 @@ sabPreProcessing
 *A pre-processing script for SABnzbd in BASH!*
 
 I always loved the "click and forget" possibility of Sickbeard and Couchpotato.<br />
-But sometimes I need to add an nzb file myself – no category is set, only the default post-script is used and mostly the folder name just looks like crap. And even when Couchpotato or Sickbeard added something there was a chance it was not what I wanted it to be.<br />
+But sometimes I need to add an nzb file myself – no category is set, only the default post-script is used and mostly the folder name just looks like crap. And even when Couchpotato or Sickbeard added something,<br/>
+there was a chance it was not what I wanted it to be.<br /><br/>
 I needed a pre-processing script.<br />
 There where various SABnzbd post-processing scripts out there,<br />
 but not many pre-processing scripts with various features – so I wrote my own in BASH.
@@ -39,7 +40,7 @@ cp 'sabPreProcessing/default.config.sh' 'sabPreProcessing/config.sh';
 
 Edit your configuration file and set your variables.<br />
 Remove the variables you wish to stay at default value.<br />
-You can extend default arrays by ‘ARRAY+=('bar');’.
+You can extend default arrays by `ARRAY+=('bar');`.
 
 Make the script files executable. This may need root rights:
 ```bash
