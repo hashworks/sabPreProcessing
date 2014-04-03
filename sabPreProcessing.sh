@@ -14,6 +14,17 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )";
 
+# Check for default config file
+if [ ! -f "$DIR"'/default.config.sh' ]; then
+    echo "Fatal error: No default config file found!";
+    exit 1;
+fi;
+
+# Create config file when non-existant
+if [ ! -f "$DIR"'/config.sh' ]; then
+    cp "$DIR"'/default.config.sh' "$DIR"'/config.sh';
+fi;
+
 # Load config files
 source "$DIR"'/default.config.sh';
 source "$DIR"'/config.sh'; # Override default config with user variables
@@ -24,6 +35,12 @@ function log() {
     echo "$(date +'%y-%m-%d %T')"": ""$1" >> "$LOGFILE";
   fi;
 }
+
+# Check for logfile
+if [ ! -f "$LOGFILE" ]; then
+    LOGFILE="$DIR"'/preprocessing.log';
+    log "Logfile not found. Using default path.";
+fi
 
 log "Starting Pre-Processing...";
 
@@ -60,7 +77,7 @@ do
   if ! [ -z "$(echo "$NAME" | grep -io ''$EXCEPTION'')" ]; then STRING_EXCEPTION=true; fi;
 done;
 
-if [ "$STRING_EXCEPTION" = "false" ]; then
+if [ "$STRING_EXCEPTION" == "false" ]; then
 
   # Get password if there is one (" / pw", other pw-options get parsed before)
   PASSWORD=$(echo "$NAME" | grep -o ' \/ \(.*\)$');
@@ -73,9 +90,16 @@ if [ "$STRING_EXCEPTION" = "false" ]; then
   fi;
 
   # Append password to PASSWORD_FILE when not already in there
-  if ! [ -z "$PASSWORD" ]; then
-    if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE")" ]; then
-    echo "$PASSWORD" >> "$PASSWORD_FILE";
+  if $ADD_TO_PASSWORD_FILE; then
+    if [ ! -f "$PASSWORD_FILE" ]; then
+      PASSWORD_FILE="$DIR"'/passwordlist';
+      log "Password file not found. Using default path.";
+    fi
+
+    if ! [ -z "$PASSWORD" ]; then
+      if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE")" ]; then
+      echo "$PASSWORD" >> "$PASSWORD_FILE";
+      fi;
     fi;
   fi;
 
