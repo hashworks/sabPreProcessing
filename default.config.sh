@@ -1,5 +1,12 @@
 #!/bin/bash
 
+####################################################################################################################################################################
+# sabPreProcessing DEFAULT CONFIG FILE - copy to config.sh and override the variables with your data.                                                              #
+# When unset, default variable will be used.                                                                                                                       #
+# Use $DIR for the actual directory of the script.                                                                                                                 #
+# Use ARRAY+=('bar') when you want to extend default arrays like GAMES_GROUPS, CLEAN_ARRAY or EXCEPTIONS.                                                          #
+####################################################################################################################################################################
+
 MIN_RELEASENAME_SIZE='13';           # Minimum string lenght of releasename before -GROUP
 
 SERIES_CATEGORY='series';            # Your SAB-cat of your tv shows
@@ -83,8 +90,10 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
              ' \/ /'
              '_PW_/');
 
-HIGH_PRIORITY_SIZE=100;                                                 # Below this size (in megabytes) priority will always be high
+HIGH_PRIORITY_SIZE=100;              # Below this size (in megabytes) priority will always be high
 
-PASSWORD_FILE='/home/username/.sabnzbdplus/passwordlist'                # (WHOLE!) Path to password file
+ADD_TO_PASSWORD_FILE=true            # Enable or disable adding the passwords to a password file
+PASSWORD_FILE="$DIR"'/passwordlist'; # (WHOLE!) Path to password file, f.e. '/home/username/.sabnzbdplus/passwordlist'
 
-DO_LOG=true;                                                            # To log or not to log, thats the question
+DO_LOG=true;                         # To log or not to log, thats the question
+LOGFILE="$DIR"'/preprocessing.log';  # (WHOLE!) Path to logfile, f.e. '/home/username/.sabnzbdplus/preprocessing.log'

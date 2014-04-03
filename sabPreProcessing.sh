@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#####################################
-# Pre-Processing Script for Sabnzbd #
-#####################################
+#########################################################################################################################################################################
+# Pre-Processing Script for Sabnzbd                                                                                                                                  ####
+# Usage: ./sabPreProcessing.sh 'Dexter.S07E06.FRENCH.720p.HDTV.x264-JMT Testmessage, not part of releasename / securepassword' '3' 'standard' '' '-100' '9711567550' ####
+#########################################################################################################################################################################
 
-# CONFIG ############################
-
+# Get actual script folder without any symbolic links
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
@@ -14,14 +14,9 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )";
 
-source "$DIR"'/config.sh';
-
-# CONFIG END ########################
-
-# Usage: ./sabPreProcessing.sh 'Dexter.S07E06.FRENCH.720p.HDTV.x264-JMT Testmessage, not part of releasename / securepassword' '3' 'standard' '' '-100' '9711567550'
-
-# Logfile
-LOGFILE="$DIR"'/preprocessing.log';
+# Load config files
+source "$DIR"'/default.config.sh';
+source "$DIR"'/config.sh'; # Override default config with user variables
 
 # Log function
 function log() {
