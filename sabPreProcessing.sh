@@ -74,7 +74,7 @@ ACCEPT=1;
 STRING_EXCEPTION=false;
 for EXCEPTION in "${EXCEPTIONS[@]}"
 do
-  if ! [ -z "$(echo "$NAME" | grep -io \""$EXCEPTION"\")" ]; then STRING_EXCEPTION=true; fi;
+  if ! [ -z "$(echo "$NAME" | grep -io "$EXCEPTION")" ]; then STRING_EXCEPTION=true; fi;
 done;
 
 if [ "$STRING_EXCEPTION" == "false" ]; then
