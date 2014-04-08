@@ -150,7 +150,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
       for GAMES_GROUP in "${GAMES_GROUPS[@]}"
       do
         if (( ${#GAMES_GROUP} > 2 )); then
-        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io \"[-| ]"$GAMES_GROUP"\")" ]; then
+        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[-| ]'"$GAMES_GROUP")" ]; then
             	log "  NZB is a game.";
   	        CATEGORY="$GAMES_CATEGORY";
   	        PRIORITY="$GAMES_PRIORITY";
