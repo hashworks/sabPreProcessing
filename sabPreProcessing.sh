@@ -104,7 +104,8 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
   fi;
 
   # Get a clean name by removing the password and some exceptions from CLEAN_ARRAY (config)
-  CLEAN_NAME="${NAME/PASSWORD/}";
+  CLEAN_NAME="${NAME/ \/ "$PASSWORD"/}";
+  CLEAN_NAME="${CLEAN_NAME/_PW_"$PASSWORD"/}";
   for CLEANER in "${CLEAN_ARRAY[@]}"
   do
     CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
