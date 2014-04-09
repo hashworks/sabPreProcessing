@@ -78,6 +78,7 @@ EXCEPTIONS=('had551');               # Strings in titles which shouldn't be pars
 CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\}[\/]\?/'
              'DVD-Rip/DVDRip'
              'WEB-DL/WEBDL'
+             'Usenetrevolution\.info/'
              '\[ TOWN \]-/'
              '\.par2/'
              'yEnc/'
