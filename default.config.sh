@@ -76,6 +76,9 @@ EXCEPTIONS=('had551');               # Strings in titles which shouldn't be pars
 
 # Strings which will be replaced after fetching the password. Regex allowed, search and replace splittet by /.
 CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\}[\/]\?/'
+	     ' \./\.'
+	     '\. /\.'
+	     'D ubbed/Dubbed'
              'DVD-Rip/DVDRip'
              'WEB-DL/WEBDL'
              'Usenetrevolution\.info/'
