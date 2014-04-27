@@ -92,10 +92,13 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
              'Lords-of-Usenet/'
              'Uploader\.Presents-/'
              'usenet-space-cowboys\.info/'
-             'usenet-space-cowboys\.info/'
+             'brothers-of-usenet\.info/'
+	     'newsconnection\.eu/'
              'Powered by httpssecre/'
              'presents\./'
              'usenet-4all\.info/'
+	     '(/'
+             ')/'
              ' \/ /'
              '_PW_/');
 
