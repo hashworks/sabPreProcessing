@@ -79,9 +79,15 @@ done;
 
 if [ "$STRING_EXCEPTION" == "false" ]; then
 
-  # Get password if there is one (" / pw", other pw-options get parsed before)
+  # Get password if there is one ("name / pw", other pw-options get parsed before)
   PASSWORD=$(echo "$NAME" | grep -o ' \/ \(.*\)$');
   PASSWORD=${PASSWORD/ \/ /};
+
+  # New: "name/pw"
+  if [ -z "$PASSWORD" ]; then
+    PASSWORD=$(echo "$NAME" | grep -o '\/\(.*\)$');
+    PASSWORD=${PASSWORD/\//};
+  fi;
 
   # Sometimes PWs MAY appear as "_PW_pass", rare
   if [ -z "$PASSWORD" ]; then
@@ -190,7 +196,7 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
   # Mix RELEASENAME, IMDB_ID and PASSWORD to final nzb name. If no RELEASENAME found, use original name.
   if ! [ -z "$RELEASENAME" ]; then
     if ! [ -z "$PASSWORD" ]; then
-      NZBNAME="$RELEASENAME""$IMDB_ID"" / ""$PASSWORD";
+      NZBNAME="$RELEASENAME""$IMDB_ID""/""$PASSWORD";
     else
       NZBNAME="$RELEASENAME""$IMDB_ID";
     fi;
