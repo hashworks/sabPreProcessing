@@ -79,20 +79,31 @@ done;
 
 if [ "$STRING_EXCEPTION" == "false" ]; then
 
-  # Get password if there is one ("name / pw", other pw-options get parsed before)
+  CLEAN_NAME="$NAME";
+
+  # Get password if there is one (" / pw", other pw-options get parsed before)
   PASSWORD=$(echo "$NAME" | grep -o ' \/ \(.*\)$');
   PASSWORD=${PASSWORD/ \/ /};
+  if [ -n "$PASSWORD" ]; then
+    CLEAN_NAME="${CLEAN_NAME/ \/ "$PASSWORD"/}";
+  fi;
 
   # New: "name/pw"
-  if [ -z "$PASSWORD" ]; then
-    PASSWORD=$(echo "$NAME" | grep -o '\/\(.*\)$');
-    PASSWORD=${PASSWORD/\//};
-  fi;
+  # if [ -z "$PASSWORD" ]; then
+  #   PASSWORD=$(echo "$NAME" | grep -o '\/\(.*\)$');
+  #   PASSWORD=${PASSWORD/\//};
+  #   if [ -n "$PASSWORD" ]; then
+  #    	CLEAN_NAME="${CLEAN_NAME/\/"$PASSWORD"/}";
+  #   fi;
+  # fi;
 
   # Sometimes PWs MAY appear as "_PW_pass", rare
   if [ -z "$PASSWORD" ]; then
     PASSWORD=$(echo "$NAME" | grep -oiE '_PW_(.*)$');
     PASSWORD=${PASSWORD/PW_/};
+    if [ -n "$PASSWORD" ]; then
+    	CLEAN_NAME="${CLEAN_NAME/_PW_"$PASSWORD"/}";
+    fi;
   fi;
 
   # Append password to PASSWORD_FILE when not already in there
@@ -109,12 +120,10 @@ if [ "$STRING_EXCEPTION" == "false" ]; then
     fi;
   fi;
 
-  # Get a clean name by removing the password and some exceptions from CLEAN_ARRAY (config)
-  CLEAN_NAME="${NAME/ \/ "$PASSWORD"/}";
-  CLEAN_NAME="${CLEAN_NAME/_PW_"$PASSWORD"/}";
+  # Get a clean name by removing some exceptions from CLEAN_ARRAY (config)
   for CLEANER in "${CLEAN_ARRAY[@]}"
   do
-    CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
+  	CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
   done;
 
   # Check if its a tv show (f.e. contains S01E01 or category is SERIES_CATEGORY)
