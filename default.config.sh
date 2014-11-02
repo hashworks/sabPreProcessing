@@ -74,6 +74,8 @@ GAMES_SCRIPT='';                     # Post-Processing script of games
 
 EXCEPTIONS=('had551');               # Strings in titles which shouldn't be parsed at all
 
+BADWORDS=('Videomann');              # Strings in titles which shouldn't be downloaded
+
 # Strings which will be replaced after fetching the password. Regex allowed, search and replace splittet by /.
 CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\}[\/]\?/'
 				' \./\.'
@@ -98,6 +100,7 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
 				'Powered by httpssecre/'
 				'presents\./'
 				'usenet-4all\.info/'
+				'Serien\.-\./'
 				'(/'
 				')/'
 				' \/ /'

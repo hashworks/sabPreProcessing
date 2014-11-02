@@ -70,154 +70,165 @@ SIZE="$6";             # Size of the download (in bytes)
 # Accept by default
 ACCEPT=1;
 
-# Handle name exceptions
-STRING_EXCEPTION=false;
-for EXCEPTION in "${EXCEPTIONS[@]}"
+# Handle name badwords
+for BADWORD in "${BADWORDS[@]}"
 do
-  if ! [ -z "$(echo "$NAME" | grep -io "$EXCEPTION")" ]; then STRING_EXCEPTION=true; fi;
+  if ! [ -z "$(echo "$NAME" | grep -io "$BADWORD")" ]; then ACCEPT=0; fi;
 done;
 
-if [ "$STRING_EXCEPTION" == "false" ]; then
+if [ "$ACCEPT" == 1 ]; then
 
-  CLEAN_NAME="$NAME";
+	# Handle name exceptions
+	STRING_EXCEPTION=false;
+	for EXCEPTION in "${EXCEPTIONS[@]}"
+	do
+	  if ! [ -z "$(echo "$NAME" | grep -io "$EXCEPTION")" ]; then STRING_EXCEPTION=true; fi;
+	done;
 
-  # Get password if there is one (" / pw", other pw-options get parsed before)
-  PASSWORD=$(echo "$NAME" | grep -o ' \/ \(.*\)$');
-  PASSWORD=${PASSWORD/ \/ /};
-  if [ -n "$PASSWORD" ]; then
-    CLEAN_NAME="${CLEAN_NAME/ \/ "$PASSWORD"/}";
-  fi;
+	if [ "$STRING_EXCEPTION" == "false" ]; then
 
-  # New: "name/pw"
-  # if [ -z "$PASSWORD" ]; then
-  #   PASSWORD=$(echo "$NAME" | grep -o '\/\(.*\)$');
-  #   PASSWORD=${PASSWORD/\//};
-  #   if [ -n "$PASSWORD" ]; then
-  #    	CLEAN_NAME="${CLEAN_NAME/\/"$PASSWORD"/}";
-  #   fi;
-  # fi;
+	  CLEAN_NAME="$NAME";
 
-  # Sometimes PWs MAY appear as "_PW_pass", rare
-  if [ -z "$PASSWORD" ]; then
-    PASSWORD=$(echo "$NAME" | grep -oiE '_PW_(.*)$');
-    PASSWORD=${PASSWORD/PW_/};
-    if [ -n "$PASSWORD" ]; then
-    	CLEAN_NAME="${CLEAN_NAME/_PW_"$PASSWORD"/}";
-    fi;
-  fi;
+	  # Get password if there is one (" / pw")
+	  PASSWORD=$(echo "$NAME" | grep -o ' \/ [^\/[:space:]]\{6,\}$');
+	  PASSWORD=${PASSWORD/ \/ /};
+	  if [ -n "$PASSWORD" ]; then
+	    CLEAN_NAME="${CLEAN_NAME/ \/ "$PASSWORD"/}";
+	  fi;
 
-  # Append password to PASSWORD_FILE when not already in there
-  if $ADD_TO_PASSWORD_FILE; then
-    if [ ! -f "$PASSWORD_FILE" ]; then
-      PASSWORD_FILE="$DIR"'/passwordlist';
-      log "Password file not found. Using default path.";
-    fi
+	  # New: "name/pw"
+	  if [ -z "$PASSWORD" ]; then
+	    PASSWORD=$(echo "$NAME" | grep -o '\/[^\/[:space:]]\{6,\}$');
+	    PASSWORD=${PASSWORD/\//};
+	    if [ -n "$PASSWORD" ]; then
+	     	CLEAN_NAME="${CLEAN_NAME/\/"$PASSWORD"/}";
+	    fi;
+	  fi;
 
-    if ! [ -z "$PASSWORD" ]; then
-      if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE")" ]; then
-      echo "$PASSWORD" >> "$PASSWORD_FILE";
-      fi;
-    fi;
-  fi;
+	  # Sometimes PWs MAY appear as "_PW_pass", rare
+	  if [ -z "$PASSWORD" ]; then
+	    PASSWORD=$(echo "$NAME" | grep -oiE '_PW_[^[:space:]]\{6,\}$');
+	    PASSWORD=${PASSWORD/PW_/};
+	    if [ -n "$PASSWORD" ]; then
+	    	CLEAN_NAME="${CLEAN_NAME/_PW_"$PASSWORD"/}";
+	    fi;
+	  fi;
 
-  # Get a clean name by removing some exceptions from CLEAN_ARRAY (config)
-  for CLEANER in "${CLEAN_ARRAY[@]}"
-  do
-  	CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
-  done;
+	  # Append password to PASSWORD_FILE when not already in there
+	  if $ADD_TO_PASSWORD_FILE; then
+	    if [ ! -f "$PASSWORD_FILE" ]; then
+	      PASSWORD_FILE="$DIR"'/passwordlist';
+	      log "Password file not found. Using default path.";
+	    fi
 
-  # Check if its a tv show (f.e. contains S01E01 or category is SERIES_CATEGORY)
-  if ! [ -z "$(echo "$CLEAN_NAME" | grep -io 'S[0-9]\{1,3\}E[0-9E-]\{1,3\}')" ]; then IS_TV_SHOW=true; else IS_TV_SHOW=false; fi;
-  if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[ ._]S[0-9-]\{1,3\}[ ._]')" ]; then IS_TV_SHOW=true; fi;
-  if [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then IS_TV_SHOW=true; fi;
+	    if ! [ -z "$PASSWORD" ]; then
+	      if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE")" ]; then
+	      echo "$PASSWORD" >> "$PASSWORD_FILE";
+	      fi;
+	    fi;
+	  fi;
 
-  # If its a tv show, set category to SERIES_CATEGORY. If size is below SERIES_MIN_SIZE pause the nzb,
-  # otherwise set priority to SERIES_PRIORITY. Additionally, set the pp-script.
-  if $IS_TV_SHOW; then
-    log " NZB is a tv show.";
-    CATEGORY="$SERIES_CATEGORY";
-    if (( SIZE < ((SERIES_MIN_SIZE * 1024 * 1024)) )); then PRIORITY='-2'; else PRIORITY="$SERIES_PRIORITY"; fi;
-    SCRIPT="$SERIES_SCRIPT";
-  fi;
+	  # Get a clean name by removing some exceptions from CLEAN_ARRAY (config)
+	  for CLEANER in "${CLEAN_ARRAY[@]}"
+	  do
+	  	CLEAN_NAME="$(echo "$CLEAN_NAME" | sed -e 's/'"$CLEANER"'/g')";
+	  done;
 
+	  # Check if its a tv show (f.e. contains S01E01 or category is SERIES_CATEGORY)
+	  if ! [ -z "$(echo "$CLEAN_NAME" | grep -io 'S[0-9]\{1,3\}E[0-9E-]\{1,3\}')" ]; then IS_TV_SHOW=true; else IS_TV_SHOW=false; fi;
+	  if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[ ._]S[0-9-]\{1,3\}[ ._]')" ]; then IS_TV_SHOW=true; fi;
+	  if [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then IS_TV_SHOW=true; fi;
 
-  if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
-    # Check if its a movie (f.e. contains imdb id or category is SERIES_CATEGORY)
-    # If movie, do tv show procedure for movies and set imdb to a CouchPotato value when found.
-    IMDB_ID=$(echo "$CLEAN_NAME" | grep -Eio 'tt[0-9]+');
-    if ! [ -z "$IMDB_ID" ]; then
-      IS_MOVIE=true;
-      if $INCLUDE_IMDB_ID; then IMDB_ID=".cp(""$IMDB_ID"")"; else IMDB_ID=""; fi;
-    else IS_MOVIE=false;
-    fi;
-    if [ "$CATEGORY" == "$MOVIES_CATEGORY" ]; then IS_MOVIE=true; fi;
-    if $IS_MOVIE; then
-      log " NZB is a movie.";
-      CATEGORY="$MOVIES_CATEGORY";
-      if (( SIZE < ((MOVIES_MIN_SIZE * 1024 * 1024)) )); then PRIORITY='-2'; else PRIORITY="$MOVIES_PRIORITY"; fi;
-      SCRIPT="$MOVIES_SCRIPT";
-    fi;
-  fi;
+	  # If its a tv show, set category to SERIES_CATEGORY. If size is below SERIES_MIN_SIZE pause the nzb,
+	  # otherwise set priority to SERIES_PRIORITY. Additionally, set the pp-script.
+	  if $IS_TV_SHOW; then
+	    log " NZB is a tv show.";
+	    CATEGORY="$SERIES_CATEGORY";
+	    if (( SIZE < ((SERIES_MIN_SIZE * 1024 * 1024)) )); then PRIORITY='-2'; else PRIORITY="$SERIES_PRIORITY"; fi;
+	    SCRIPT="$SERIES_SCRIPT";
+	  fi;
 
 
-  if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
-    if ! [ "$CATEGORY" == "$MOVIES_CATEGORY" ]; then
-      # If GAMES_GROUPS name is found do tv show procedure for games
-      for GAMES_GROUP in "${GAMES_GROUPS[@]}"
-      do
-        if (( ${#GAMES_GROUP} > 2 )); then
-        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[-| ]'"$GAMES_GROUP")" ]; then
-            	log "  NZB is a game.";
-  	        CATEGORY="$GAMES_CATEGORY";
-  	        PRIORITY="$GAMES_PRIORITY";
-  	        SCRIPT="$GAMES_SCRIPT";
-        	fi;
-        fi;
-      done;
-    fi;
-  fi;
+	  if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
+	    # Check if its a movie (f.e. contains imdb id or category is SERIES_CATEGORY)
+	    # If movie, do tv show procedure for movies and set imdb to a CouchPotato value when found.
+	    IMDB_ID=$(echo "$CLEAN_NAME" | grep -Eio 'tt[0-9]+');
+	    if ! [ -z "$IMDB_ID" ]; then
+	      IS_MOVIE=true;
+	      if $INCLUDE_IMDB_ID; then IMDB_ID=".cp(""$IMDB_ID"")"; else IMDB_ID=""; fi;
+	    else IS_MOVIE=false;
+	    fi;
+	    if [ "$CATEGORY" == "$MOVIES_CATEGORY" ]; then IS_MOVIE=true; fi;
+	    if $IS_MOVIE; then
+	      log " NZB is a movie.";
+	      CATEGORY="$MOVIES_CATEGORY";
+	      if (( SIZE < ((MOVIES_MIN_SIZE * 1024 * 1024)) )); then PRIORITY='-2'; else PRIORITY="$MOVIES_PRIORITY"; fi;
+	      SCRIPT="$MOVIES_SCRIPT";
+	    fi;
+	  fi;
 
 
-  # Set priority to high when size is under HIGH_PRIORITY_SIZE.
-  if (( SIZE < ((HIGH_PRIORITY_SIZE * 1024 * 1024)) ));
-    then PRIORITY='1';
-    log " Size below ''$HIGH_PRIORITY_SIZE''mb, assigning high priority.";
-  fi;
+	  if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
+	    if ! [ "$CATEGORY" == "$MOVIES_CATEGORY" ]; then
+	      # If GAMES_GROUPS name is found do tv show procedure for games
+	      for GAMES_GROUP in "${GAMES_GROUPS[@]}"
+	      do
+	        if (( ${#GAMES_GROUP} > 2 )); then
+	        	if ! [ -z "$(echo "$CLEAN_NAME" | grep -io '[-| ]'"$GAMES_GROUP")" ]; then
+	            	log "  NZB is a game.";
+	  	        CATEGORY="$GAMES_CATEGORY";
+	  	        PRIORITY="$GAMES_PRIORITY";
+	  	        SCRIPT="$GAMES_SCRIPT";
+	        	fi;
+	        fi;
+	      done;
+	    fi;
+	  fi;
 
-  # Get the releasename if there is one
-  RELEASENAME_REGEX="[_a-zA-Z.0-9-]\{""$MIN_RELEASENAME_SIZE"",\}-[a-zA-Z0-9]\{2,\}";
-  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o ""$RELEASENAME_REGEX"" | head -1);
-  if [ -z "$RELEASENAME" ]; then
-    # Replace spaces with . and try again
-    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
-    if [ -z "$RELEASENAME" ]; then
-      # Try another method to catch the releasename (Catches "Dexter FRENCH test 720p HDTV x264 JMT" f.e.
-      readarray -t VAR <<< "$(echo "$CLEAN_NAME" | grep -Eo '( [a-zA-Z0-9]{2,15})')";
-      if ! [ -z "$VAR" ]; then
-        VAR=${VAR[((${#VAR[@]} - 1))]};
-        VAR=${VAR/ /};
-        VAR=${CLEAN_NAME/ $VAR/-$VAR};
-        RELEASENAME=$(echo "${VAR// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
-      fi;
-    fi;
-  fi;
 
-  # Mix RELEASENAME, IMDB_ID and PASSWORD to final nzb name. If no RELEASENAME found, use original name.
-  if ! [ -z "$RELEASENAME" ]; then
-    if ! [ -z "$PASSWORD" ]; then
-      NZBNAME="$RELEASENAME""$IMDB_ID""/""$PASSWORD";
-    else
-      NZBNAME="$RELEASENAME""$IMDB_ID";
-    fi;
-    log " New name: \"""$NZBNAME""\".";
-  else
-    NZBNAME="$NAME";
-    log " No releasename found, using original name.";
-  fi;
+	  # Set priority to high when size is under HIGH_PRIORITY_SIZE.
+	  if (( SIZE < ((HIGH_PRIORITY_SIZE * 1024 * 1024)) ));
+	    then PRIORITY='1';
+	    log " Size below ''$HIGH_PRIORITY_SIZE''mb, assigning high priority.";
+	  fi;
 
+	  # Get the releasename if there is one
+	  RELEASENAME_REGEX="[_a-zA-Z.0-9-]\{""$MIN_RELEASENAME_SIZE"",\}-[a-zA-Z0-9]\{2,\}";
+	  RELEASENAME=$(echo "$CLEAN_NAME" | grep -o ""$RELEASENAME_REGEX"" | head -1);
+	  if [ -z "$RELEASENAME" ]; then
+	    # Replace spaces with . and try again
+	    RELEASENAME=$(echo "${CLEAN_NAME// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
+	    if [ -z "$RELEASENAME" ]; then
+	      # Try another method to catch the releasename (Catches "Dexter FRENCH test 720p HDTV x264 JMT" f.e.
+	      readarray -t VAR <<< "$(echo "$CLEAN_NAME" | grep -Eo '( [a-zA-Z0-9]{2,15})')";
+	      if ! [ -z "$VAR" ]; then
+	        VAR=${VAR[((${#VAR[@]} - 1))]};
+	        VAR=${VAR/ /};
+	        VAR=${CLEAN_NAME/ $VAR/-$VAR};
+	        RELEASENAME=$(echo "${VAR// /.}" | grep -o ""$RELEASENAME_REGEX"" | head -1);
+	      fi;
+	    fi;
+	  fi;
+
+	  # Mix RELEASENAME, IMDB_ID and PASSWORD to final nzb name. If no RELEASENAME found, use original name.
+	  if ! [ -z "$RELEASENAME" ]; then
+	    if ! [ -z "$PASSWORD" ]; then
+	      NZBNAME="$RELEASENAME""$IMDB_ID""/""$PASSWORD";
+	    else
+	      NZBNAME="$RELEASENAME""$IMDB_ID";
+	    fi;
+	    log " New name: \"""$NZBNAME""\".";
+	  else
+	    NZBNAME="$NAME";
+	    log " No releasename found, using original name.";
+	  fi;
+
+	else
+	  log " String exception found - stopped pre processing, using original name.";
+	  NZBNAME="$NAME";
+	fi;
 else
-  log " String exception found - stopped pre processing, using original name.";
-  NZBNAME="$NAME";
+  log " String badword found.";
 fi;
 
 # Each parameter (except 1) can be an empty line, meaning the original value.
