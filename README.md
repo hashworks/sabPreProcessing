@@ -18,6 +18,7 @@ but not many pre-processing scripts with various features – so I wrote my own 
 * Get the release name out of the nzb name and use as final folder name
 * Clean out many UseNet exceptions
 * Disable script for own exceptions
+* Refuse nzbs using a badword filter
 * Many configurable variables
 * Exact log file
 
