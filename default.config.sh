@@ -81,6 +81,7 @@ CLEAN_ARRAY=('\(http[s]\?:\/\/\|www\.\)\{1\}[a-zA-Z0-9\.-]\{4,\}\.[a-zA-Z]\{2,4\
 				' \./\.'
 				'\. /\.'
 				'D ubbed/Dubbed'
+				'Dub bed/Dubbed'
 				'DVD-Rip/DVDRip'
 				'WEB-DL/WEBDL'
 				'Usenetrevolution\.info/'
