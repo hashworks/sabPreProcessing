@@ -124,7 +124,7 @@ if $ADD_TO_PASSWORD_FILE; then
 	fi;
 
 	if ! [ -z "$PASSWORD" ]; then
-		if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE")" ]; then
+		if [ -z "$(grep -Eo "^${PASSWORD}\$" "$PASSWORD_FILE" 2>/dev/null)" ]; then
 			echo "$PASSWORD" >> "$PASSWORD_FILE";
 		fi;
 	fi;
@@ -150,7 +150,6 @@ if $IS_TV_SHOW; then
 	SCRIPT="$SERIES_SCRIPT";
 fi;
 
-
 if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
 	# Check if its a movie (f.e. contains imdb id or category is SERIES_CATEGORY)
 	# If movie, do tv show procedure for movies and set imdb to a CouchPotato value when found.
@@ -169,7 +168,6 @@ if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
 		SCRIPT="$MOVIES_SCRIPT";
 	fi;
 fi;
-
 
 if ! [ "$CATEGORY" == "$SERIES_CATEGORY" ]; then
 	if ! [ "$CATEGORY" == "$MOVIES_CATEGORY" ]; then
